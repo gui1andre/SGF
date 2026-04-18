@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/SGFService/" />
+  <Folder Name="/SGFService/SGF.Application/" />
+  <Folder Name="/SGFService/SGF.Domain/">
+    <Project Path="Domain/Domain.csproj" />
+  </Folder>
+  <Folder Name="/SGFService/SGF.Infrastructure/" />
+  <Folder Name="/SGFService/SGF.Presentation/" />
+  <Folder Name="/SGFService/SGF.Tests/" />
+  <Folder Name="/SGFService/SGF.Tests/Domain/">
+    <Project Path="SGF.Domain/SGF.Domain.Test.csproj" />
+  </Folder>
+</Solution>
