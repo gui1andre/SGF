@@ -12,7 +12,6 @@ namespace Domain.Faturas.Entities
 
         private readonly List<ItemFatura> _itensFatura = new List<ItemFatura>();
         public IReadOnlyCollection<ItemFatura> ItensFatura => _itensFatura.AsReadOnly();
-
         public decimal ValorTotal => _itensFatura.Sum(x => x.ValorTotal);
 
     

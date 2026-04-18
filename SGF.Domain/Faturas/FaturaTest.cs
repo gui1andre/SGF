@@ -20,8 +20,8 @@ namespace SGF.Domain.Test.Faturas
         public void Deve_Recalcular_ValorTotal_Automaticamente_Ao_Adicionar_Itens()
         {
             var fatura = new Fatura { NomeCliente = "Dev Pleno" };
-            var item1 = new ItemFatura { Quantidade = 2, ValorUnitario = 100 };
-            var item2 = new ItemFatura { Quantidade = 1, ValorUnitario = 50 };
+            var item1 = new ItemFatura { Quantidade = 2, ValorUnitario = 100, Descricao = "Descricao do item 1" };
+            var item2 = new ItemFatura { Quantidade = 1, ValorUnitario = 50, Descricao = "Descrição do item 2" };
 
             fatura.AdicionarItem(item1);
             fatura.AdicionarItem(item2);
@@ -65,7 +65,7 @@ namespace SGF.Domain.Test.Faturas
         [Fact]
         public void Nao_Deve_Permitir_Remover_Tem_Ao_Fechar_Fatura() {
             var fatura = new Fatura { NomeCliente = "Teste Remoção Item" };
-            var item = new ItemFatura { Quantidade = 1, ValorUnitario = 100, Justificativa = "Teste" };
+            var item = new ItemFatura { Quantidade = 1, ValorUnitario = 100, Justificativa = "Teste", Descricao = "Descrição do item 1" };
             fatura.AdicionarItem(item);
             fatura.FecharFatura();
 

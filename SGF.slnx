@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/SGFService/" />
-  <Folder Name="/SGFService/SGF.Application/" />
+  <Folder Name="/SGFService/SGF.Application/">
+    <Project Path="Application/Application.csproj" Id="e15679ad-a70e-4680-ac6a-fce3017bd978" />
+  </Folder>
   <Folder Name="/SGFService/SGF.Domain/">
     <Project Path="Domain/Domain.csproj" />
   </Folder>
