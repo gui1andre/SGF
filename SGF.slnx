@@ -6,7 +6,9 @@
   <Folder Name="/SGFService/SGF.Domain/">
     <Project Path="Domain/Domain.csproj" />
   </Folder>
-  <Folder Name="/SGFService/SGF.Infrastructure/" />
+  <Folder Name="/SGFService/SGF.Infrastructure/">
+    <Project Path="Infrastructure/Infrastructure.csproj" Id="aa372086-d5e5-467c-bedf-3f8bf831c7f0" />
+  </Folder>
   <Folder Name="/SGFService/SGF.Presentation/" />
   <Folder Name="/SGFService/SGF.Tests/" />
   <Folder Name="/SGFService/SGF.Tests/Domain/">
