@@ -1,41 +1,50 @@
 ﻿using Domain.Faturas.Entities;
-using Domain.ItensFatura.Exceptions;
 
 namespace Domain.ItensFatura.Entities
 {
     public class ItemFatura
     {
         public Guid Id { get; set; }
-        public string Descricao { get; set; } = string.Empty;
-        public int Quantidade { get; set; }
-        public decimal ValorUnitario { get; set; }
-        public decimal ValorTotal => ValorUnitario * Quantidade;
-        public string? Justificativa { get; set; }
-        public virtual Fatura Fatura { get; set; }
+        public Guid FaturaId { get; private set; }
+        public string Descricao { get; private set; } = string.Empty;
+        public int Quantidade { get; private set; }
+        public decimal ValorUnitario { get; private set; }
+        public decimal ValorTotal { get; private set; }
+        public string? Justificativa { get; private set; }
 
-        public void Validar()
+        protected ItemFatura() { }
+
+        public ItemFatura(Guid faturaId, string descricao, int quantidade, decimal valorUnitario, string? justificativa = null) 
         {
-            if (!ValidarJustificativaNecessaria())
-                throw new InvalidJustificativaException("Itens com valor total superior a R$ 1.000,00 exigem justificativa.");
-
-            if(!ValidarDescricao())
-                throw new InvalidOperationException("Descrição inválida.");
+            Id = Guid.NewGuid();
+            FaturaId = faturaId;
+            Atualizar(descricao, quantidade, valorUnitario, justificativa);
         }
 
-        private bool ValidarDescricao()
+        public void Atualizar(string descricao, int quantidade, decimal valorUnitario, string? justificativa)
         {
-            if(string.IsNullOrWhiteSpace(Descricao) || Descricao.Length < 5)
-                return false;
 
-            return true;
-        }
 
-        public bool ValidarJustificativaNecessaria()
-        {
-            if (ValorUnitario > 1000 && string.IsNullOrWhiteSpace(Justificativa))
-                return false;
+            if (string.IsNullOrWhiteSpace(descricao) || descricao.Length < 5)
+                throw new ArgumentException("Descrição deve ter mais que 5 caracteres.");
 
-            return true;
+            if (valorUnitario <= 0)
+                throw new ArgumentException("Valor unitario deve ser maior que zero.");
+
+            if (quantidade <= 0)
+                throw new ArgumentException("Quantidade deve ser maior que 0.");
+
+            if (valorUnitario > 1000 && string.IsNullOrWhiteSpace(justificativa))
+                throw new ArgumentException("Itens com valor total superior a R$ 1.000,00 exigem justificativa.");
+
+            Descricao = descricao;
+            Quantidade = quantidade;
+            ValorUnitario = valorUnitario;
+            ValorTotal = valorUnitario * quantidade;
+
+            
+
+            Justificativa = string.IsNullOrEmpty(justificativa) ? null : justificativa;
         }
     }
 }

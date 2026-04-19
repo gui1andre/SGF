@@ -6,31 +6,45 @@ namespace Domain.Faturas.Entities
     public class Fatura
     {
         public Guid Id { get; set; }
-        public string NomeCliente { get; set; } = string.Empty;
-        public DateTime DataEmissao { get; set; }
+        public long Numero { get; private set; }
+        public string NomeCliente { get; private set; } = string.Empty;
+        public DateTime DataEmissao { get; private set; }
         public StatusFatura Status { get; private set; } = StatusFatura.Aberta;
-
+        public decimal ValorTotal {  get; private set; }
         private readonly List<ItemFatura> _itensFatura = new List<ItemFatura>();
         public IReadOnlyCollection<ItemFatura> ItensFatura => _itensFatura.AsReadOnly();
-        public decimal ValorTotal => _itensFatura.Sum(x => x.ValorTotal);
 
-    
+
+        protected Fatura() { }
+
+        public Fatura(string nomeCliente)
+        {
+            Id = Guid.NewGuid();
+            AtualizarCliente(nomeCliente);
+            ValorTotal = 0;
+        }
+
+        public void AtualizarCliente(string nomeCliente)
+        {
+            if(string.IsNullOrEmpty(nomeCliente))
+                throw new ArgumentException("O nome do cliente é obrigatório.");
+
+            NomeCliente = nomeCliente;
+        }
+
         public void AdicionarItem(ItemFatura itemFatura)
         {
-            itemFatura.Validar();
-
-            if(this.Status == StatusFatura.Fechada)
-                throw new InvalidOperationException("Não é possível adicionar itens a uma fatura fechada.");
-
+            ValidarFaturaAberta();
             _itensFatura.Add(itemFatura);
+            RecalcularValorTotal();
         }
 
         public void RemoverItem(ItemFatura itemFatura)
-        {   
-            if (this.Status == StatusFatura.Fechada)
-                throw new InvalidOperationException("Não é possível remover itens de uma fatura fechada.");
+        {
+            ValidarFaturaAberta();
 
             _itensFatura.Remove(itemFatura);
+            RecalcularValorTotal();
         }
 
         public void FecharFatura()
@@ -42,6 +56,17 @@ namespace Domain.Faturas.Entities
             Status = StatusFatura.Fechada;
         }
 
-       
+        private void RecalcularValorTotal()
+        {
+            ValorTotal = _itensFatura.Sum(item => item.ValorTotal);
+        }
+
+        private void ValidarFaturaAberta() 
+        {
+            if (this.Status == StatusFatura.Fechada)
+                throw new InvalidOperationException("Não é possível alterar uma fatura fechada.");
+        }
+
+
     }
 }
