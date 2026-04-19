@@ -4,9 +4,5 @@ using System.Text;
 
 namespace Application.Faturas.DTO
 {
-    public enum StatusFaturaDTO
-    {
-        Aberta,
-        Fechada
-    }
+    public record CriarFaturaDTO(string NomeCliente);
 }
