@@ -109,7 +109,7 @@ namespace SGF.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var result = await _manager.UpdateItemAsync(faturaId, itensId, request);
+            var result = await _manager.AtualizarItemAsync(faturaId, itensId, request);
             return Ok(result);
         }
 

@@ -1,11 +1,11 @@
-﻿using Domain.Faturas.Enums;
+﻿using Domain.Common;
+using Domain.Faturas.Enums;
 using Domain.ItensFatura.Entities;
 
 namespace Domain.Faturas.Entities
 {
-    public class Fatura
+    public class Fatura : BaseEntity
     {
-        public Guid Id { get; set; }
         public long Numero { get; private set; }
         public string NomeCliente { get; private set; } = string.Empty;
         public DateTime? DataEmissao { get; private set; }
@@ -15,11 +15,10 @@ namespace Domain.Faturas.Entities
         public IReadOnlyCollection<ItemFatura> ItensFatura => _itensFatura.AsReadOnly();
 
 
-        protected Fatura() { }
+        protected Fatura() : base() { }
 
-        public Fatura(string nomeCliente)
+        public Fatura(string nomeCliente) : base()
         {
-            Id = Guid.NewGuid();
             AtualizarCliente(nomeCliente);
             ValorTotal = 0;
         }
@@ -30,6 +29,7 @@ namespace Domain.Faturas.Entities
                 throw new ArgumentException("O nome do cliente é obrigatório.");
 
             NomeCliente = nomeCliente;
+            AtualizadaEm = DateTime.UtcNow;
         }
 
         public void AdicionarItem(ItemFatura itemFatura)
@@ -37,6 +37,7 @@ namespace Domain.Faturas.Entities
             ValidarFaturaAberta();
             _itensFatura.Add(itemFatura);
             RecalcularValorTotal();
+            AtualizadaEm = DateTime.UtcNow;
         }
 
         public void RemoverItem(Guid itemId)
@@ -47,6 +48,7 @@ namespace Domain.Faturas.Entities
 
             _itensFatura.Remove(item);
             RecalcularValorTotal();
+            AtualizadaEm = DateTime.UtcNow;
         }
 
         public void AtualizarItem(Guid itemId, string descricao, int quantidade, decimal valorUnitario, string? justificativa)
@@ -57,6 +59,7 @@ namespace Domain.Faturas.Entities
 
             item.Atualizar(descricao, quantidade, valorUnitario, justificativa);
             RecalcularValorTotal();
+            AtualizadaEm = DateTime.UtcNow;
         }
 
         public void FecharFatura()
@@ -69,6 +72,7 @@ namespace Domain.Faturas.Entities
 
             DataEmissao = DateTime.UtcNow;
             Status = StatusFatura.Fechada;
+            AtualizadaEm = DateTime.UtcNow;
         }
 
         private void RecalcularValorTotal()

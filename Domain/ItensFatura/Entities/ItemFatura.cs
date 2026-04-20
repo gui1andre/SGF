@@ -1,8 +1,9 @@
-﻿namespace Domain.ItensFatura.Entities
+﻿using Domain.Common;
+
+namespace Domain.ItensFatura.Entities
 {
-    public class ItemFatura
+    public class ItemFatura : BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid FaturaId { get; private set; }
         public string Descricao { get; private set; } = string.Empty;
         public int Quantidade { get; private set; }
@@ -10,19 +11,16 @@
         public decimal ValorTotal { get; private set; }
         public string? Justificativa { get; private set; }
 
-        protected ItemFatura() { }
+        protected ItemFatura() : base() { }
 
-        public ItemFatura(Guid faturaId, string descricao, int quantidade, decimal valorUnitario, string? justificativa = null) 
+        public ItemFatura(Guid faturaId, string descricao, int quantidade, decimal valorUnitario, string? justificativa = null) : base()
         {
-            Id = Guid.NewGuid();
             FaturaId = faturaId;
             Atualizar(descricao, quantidade, valorUnitario, justificativa);
         }
 
         public void Atualizar(string descricao, int quantidade, decimal valorUnitario, string? justificativa)
         {
-
-
             if (string.IsNullOrWhiteSpace(descricao) || descricao.Length < 5)
                 throw new ArgumentException("Descrição deve ter mais que 5 caracteres.");
 
@@ -39,10 +37,9 @@
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
             ValorTotal = valorUnitario * quantidade;
-
-            
-
             Justificativa = string.IsNullOrEmpty(justificativa) ? null : justificativa;
+
+            AtualizadaEm = DateTime.UtcNow;
         }
     }
 }

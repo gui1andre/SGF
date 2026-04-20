@@ -14,7 +14,7 @@ namespace Application.Faturas.Ports
         Task DeletarAsync(Guid id);
         Task<FaturaDTO> FecharFaturaAsync(Guid id);
         Task<FaturaDTO> AdicionarItemAsync(Guid id, AdicionarItemDTO request);
-        Task<FaturaDTO> UpdateItemAsync(Guid faturaId, Guid ItemId, AtualizarItemDTO request);
+        Task<FaturaDTO> AtualizarItemAsync(Guid faturaId, Guid ItemId, AtualizarItemDTO request);
         Task<FaturaDTO> RemoverItemAsync(Guid faturaId, Guid itemId);
 
 

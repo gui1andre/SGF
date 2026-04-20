@@ -238,7 +238,7 @@ namespace SGF.Application.Test
             var request = new AtualizarItemDTO("Produto Atualizado", 2, 150m, null);
 
             // Act
-            var result = await _manager.UpdateItemAsync(fatura.Id, item.Id, request);
+            var result = await _manager.AtualizarItemAsync(fatura.Id, item.Id, request);
 
             // Assert
             Assert.Equal(300m, result.ValorTotal);
