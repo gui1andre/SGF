@@ -2,7 +2,6 @@
 using Application.Faturas.Ports;
 using Domain.Faturas.Enums;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SGF.API.Controllers
@@ -65,8 +64,13 @@ namespace SGF.API.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarClienteDTO request)
+        public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarClienteDTO request, [FromServices] IValidator<AtualizarClienteDTO> validator)
         {
+            var validationResult = await validator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var result = await _manager.AtualizarAsync(id, request);
             return Ok(result);
         }
@@ -86,15 +90,25 @@ namespace SGF.API.Controllers
         }
 
         [HttpPost("{faturaId:guid}/itens")]
-        public async Task<IActionResult> AdicionarItem(Guid faturaId, [FromBody] AdicionarItemDTO request)
+        public async Task<IActionResult> AdicionarItem(Guid faturaId, [FromBody] AdicionarItemDTO request, [FromServices] IValidator<AdicionarItemDTO> validator)
         {
+            var validationResult = await validator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var result = await _manager.AdicionarItemAsync(faturaId, request);
-            return CreatedAtAction(nameof(ObterPorId), new { id = result.Id });
+            return CreatedAtAction(nameof(ObterPorId), new { id = result.Id }, result);
         }
 
         [HttpPut("{faturaId:guid}/itens/{itensId:guid}")]
-        public async Task<IActionResult> AtualizarItem(Guid faturaId, Guid itensId, AtualizarItemDTO request)
+        public async Task<IActionResult> AtualizarItem(Guid faturaId, Guid itensId, AtualizarItemDTO request, [FromServices] IValidator<AtualizarItemDTO> validator)
         {
+            var validationResult = await validator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var result = await _manager.UpdateItemAsync(faturaId, itensId, request);
             return Ok(result);
         }

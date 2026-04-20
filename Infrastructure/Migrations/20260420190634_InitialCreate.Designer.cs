@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20260420171955_InitialCreate")]
+    [Migration("20260420190634_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -28,10 +28,9 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Faturas.Entities.Fatura", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DataEmissao")
+                    b.Property<DateTime?>("DataEmissao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NomeCliente")
@@ -40,8 +39,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<long>("Numero")
-                        .HasMaxLength(50)
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Numero"));
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -82,6 +83,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FaturaId");
+
                     b.ToTable("Items");
                 });
 
@@ -89,7 +92,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Faturas.Entities.Fatura", null)
                         .WithMany("ItensFatura")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("FaturaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

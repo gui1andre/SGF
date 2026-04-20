@@ -10,7 +10,7 @@ namespace Application.Faturas.DTO
         Guid Id,
         long Numero,
         string NomeCliente,
-        DateTime DataEmissao,
+        DateTime? DataEmissao,
         StatusFatura Status,
         Decimal ValorTotal,
         IEnumerable<ItemFaturaDTO> ItensFatura

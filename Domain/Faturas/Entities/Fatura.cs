@@ -8,7 +8,7 @@ namespace Domain.Faturas.Entities
         public Guid Id { get; set; }
         public long Numero { get; private set; }
         public string NomeCliente { get; private set; } = string.Empty;
-        public DateTime DataEmissao { get; private set; }
+        public DateTime? DataEmissao { get; private set; }
         public StatusFatura Status { get; private set; } = StatusFatura.Aberta;
         public decimal ValorTotal {  get; private set; }
         private readonly List<ItemFatura> _itensFatura = new List<ItemFatura>();
@@ -61,6 +61,9 @@ namespace Domain.Faturas.Entities
 
         public void FecharFatura()
         {
+            if(!this.ItensFatura.Any())
+                throw new InvalidOperationException("Não é possível fechar uma fatura sem itens.");
+
             if (Status == StatusFatura.Fechada)
                 throw new InvalidOperationException("A fatura já está fechada.");
 

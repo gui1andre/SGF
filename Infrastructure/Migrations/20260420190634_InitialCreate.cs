@@ -16,9 +16,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Numero = table.Column<long>(type: "bigint", maxLength: 50, nullable: false),
+                    Numero = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NomeCliente = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    DataEmissao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataEmissao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     ValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -43,12 +44,17 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Items", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Items_Faturas_Id",
-                        column: x => x.Id,
+                        name: "FK_Items_Faturas_FaturaId",
+                        column: x => x.FaturaId,
                         principalTable: "Faturas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_FaturaId",
+                table: "Items",
+                column: "FaturaId");
         }
 
         /// <inheritdoc />

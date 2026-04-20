@@ -1,4 +1,5 @@
 ﻿using Domain.ItensFatura.Entities;
+using Domain.Faturas.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -13,6 +14,9 @@ namespace Infrastructure.Data
         {
 
             builder.HasKey(i => i.Id);
+
+            builder.Property(i => i.Id)
+                .ValueGeneratedNever();
 
             builder.Property(i => i.FaturaId)
                 .IsRequired();
@@ -32,6 +36,11 @@ namespace Infrastructure.Data
 
             builder.Property(i => i.Justificativa)
                 .HasMaxLength(1000);
+
+            builder.HasOne<Fatura>()
+                .WithMany(f => f.ItensFatura)
+                .HasForeignKey(i => i.FaturaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

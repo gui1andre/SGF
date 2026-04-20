@@ -1,6 +1,4 @@
-﻿using Domain.Faturas.Entities;
-
-namespace Domain.ItensFatura.Entities
+﻿namespace Domain.ItensFatura.Entities
 {
     public class ItemFatura
     {
@@ -34,7 +32,7 @@ namespace Domain.ItensFatura.Entities
             if (quantidade <= 0)
                 throw new ArgumentException("Quantidade deve ser maior que 0.");
 
-            if (valorUnitario > 1000 && string.IsNullOrWhiteSpace(justificativa))
+            if (valorUnitario * quantidade > 1000 && string.IsNullOrWhiteSpace(justificativa))
                 throw new ArgumentException("Itens com valor total superior a R$ 1.000,00 exigem justificativa.");
 
             Descricao = descricao;

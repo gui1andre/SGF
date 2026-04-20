@@ -19,7 +19,6 @@ namespace Infrastructure.Repositories
 
         public async Task AtualizarAsync(Fatura fatura)
         {
-            _context.Faturas.Update(fatura);
             await _context.SaveChangesAsync();
         }
 
@@ -59,7 +58,6 @@ namespace Infrastructure.Repositories
             return await _context
                 .Faturas
                 .Include(f => f.ItensFatura)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(f => f.Id == id);
         }
     }
