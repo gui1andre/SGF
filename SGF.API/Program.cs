@@ -3,12 +3,20 @@ using Application.Faturas.Ports;
 using Application.Validators;
 using Domain.Faturas.Interfaces;
 using FluentValidation;
+using Infrastructure;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using SGF.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDBContext>(options =>
+                options.UseSqlServer(connectionString));
+
 
 builder.Services.AddScoped<IFaturaManager, FaturaManager>();
 builder.Services.AddScoped<IFaturaRepository, FaturaRepository>();
@@ -25,6 +33,7 @@ app.UseMiddleware<ExceptionHadleMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

@@ -39,7 +39,7 @@ namespace SGF.API.Controllers
             return CreatedAtAction(nameof(ObterPorId), new { id = fatura.Id }, fatura);
         }
 
-        [HttpGet("{id: Guid}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
             var fatura = await _manager.ObterPorIdAsync(id);
@@ -64,42 +64,42 @@ namespace SGF.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id: Guid}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarClienteDTO request)
         {
             var result = await _manager.AtualizarAsync(id, request);
             return Ok(result);
         }
 
-        [HttpDelete("{id: Guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Deletar(Guid id)
         {
             await _manager.DeletarAsync(id);
             return NoContent();
         }
 
-        [HttpPut("{id: Guid}/Fechar")]
+        [HttpPut("{id:guid}/Fechar")]
         public async Task<IActionResult> Fechar(Guid id)
         {
             var result = await _manager.FecharFaturaAsync(id);
             return Ok(result);
         }
 
-        [HttpPost("{faturaId: Guid}/itens")]
+        [HttpPost("{faturaId:guid}/itens")]
         public async Task<IActionResult> AdicionarItem(Guid faturaId, [FromBody] AdicionarItemDTO request)
         {
             var result = await _manager.AdicionarItemAsync(faturaId, request);
             return CreatedAtAction(nameof(ObterPorId), new { id = result.Id });
         }
 
-        [HttpPut("{faturaId: Guid}/itens/{itensId: Guid}")]
+        [HttpPut("{faturaId:guid}/itens/{itensId:guid}")]
         public async Task<IActionResult> AtualizarItem(Guid faturaId, Guid itensId, AtualizarItemDTO request)
         {
             var result = await _manager.UpdateItemAsync(faturaId, itensId, request);
             return Ok(result);
         }
 
-        [HttpDelete("{faturaId: Guid}/itens/{itensId: Guid}")]
+        [HttpDelete("{faturaId:guid}/itens/{itensId:guid}")]
         public async Task<IActionResult> RemoverItem(Guid faturaId, Guid itensId) 
         {
             var result = await _manager.RemoverItemAsync(faturaId, itensId);
