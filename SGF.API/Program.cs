@@ -29,17 +29,23 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHadleMiddleware>();
 
+app.MapOpenApi();
+app.MapScalarApiReference();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    db.Database.Migrate();
+}
 
 app.Run();
