@@ -10,11 +10,14 @@
     <Project Path="Infrastructure/Infrastructure.csproj" Id="aa372086-d5e5-467c-bedf-3f8bf831c7f0" />
   </Folder>
   <Folder Name="/SGFService/SGF.Presentation/" />
+  <Folder Name="/SGFService/SGF.Presentation/SGF.API/">
+    <Project Path="SGF.API/SGF.API.csproj" Id="ce261450-69f3-424b-a79c-d52c170b8e62" />
+  </Folder>
   <Folder Name="/SGFService/SGF.Tests/" />
-  <Folder Name="/SGFService/SGF.Tests/Application/">
+  <Folder Name="/SGFService/SGF.Tests/SGF.Application.Test/">
     <Project Path="SGF.Application.Test/SGF.Application.Test.csproj" Id="648f5b4b-1b4f-4ebe-8582-3762e61312ad" />
   </Folder>
-  <Folder Name="/SGFService/SGF.Tests/Domain/">
+  <Folder Name="/SGFService/SGF.Tests/SGF.Domain.Test/">
     <Project Path="SGF.Domain/SGF.Domain.Test.csproj" />
   </Folder>
 </Solution>
