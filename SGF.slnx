@@ -11,6 +11,9 @@
   </Folder>
   <Folder Name="/SGFService/SGF.Presentation/" />
   <Folder Name="/SGFService/SGF.Tests/" />
+  <Folder Name="/SGFService/SGF.Tests/Application/">
+    <Project Path="SGF.Application.Test/SGF.Application.Test.csproj" Id="648f5b4b-1b4f-4ebe-8582-3762e61312ad" />
+  </Folder>
   <Folder Name="/SGFService/SGF.Tests/Domain/">
     <Project Path="SGF.Domain/SGF.Domain.Test.csproj" />
   </Folder>

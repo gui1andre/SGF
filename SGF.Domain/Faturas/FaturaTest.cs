@@ -83,7 +83,7 @@ namespace SGF.Domain.Test.Faturas
             fatura.AdicionarItem(item);
             fatura.FecharFatura();
 
-            Assert.Throws<InvalidOperationException>(() => fatura.RemoverItem(item));
+            Assert.Throws<InvalidOperationException>(() => fatura.RemoverItem(item.Id));
         }
     }
 }

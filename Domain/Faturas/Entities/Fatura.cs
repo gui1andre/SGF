@@ -39,11 +39,23 @@ namespace Domain.Faturas.Entities
             RecalcularValorTotal();
         }
 
-        public void RemoverItem(ItemFatura itemFatura)
+        public void RemoverItem(Guid itemId)
         {
             ValidarFaturaAberta();
+            var item = _itensFatura.FirstOrDefault(i => i.Id == itemId)
+            ?? throw new InvalidOperationException($"Item não encontrado na fatura.");
 
-            _itensFatura.Remove(itemFatura);
+            _itensFatura.Remove(item);
+            RecalcularValorTotal();
+        }
+
+        public void AtualizarItem(Guid itemId, string descricao, int quantidade, decimal valorUnitario, string? justificativa)
+        {
+            ValidarFaturaAberta();
+            var item = _itensFatura.FirstOrDefault(i => i.Id == itemId)
+            ?? throw new InvalidOperationException($"Item não encontrado na fatura.");
+
+            item.Atualizar(descricao, quantidade, valorUnitario, justificativa);
             RecalcularValorTotal();
         }
 
@@ -66,7 +78,6 @@ namespace Domain.Faturas.Entities
             if (this.Status == StatusFatura.Fechada)
                 throw new InvalidOperationException("Não é possível alterar uma fatura fechada.");
         }
-
 
     }
 }

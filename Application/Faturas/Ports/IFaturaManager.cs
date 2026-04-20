@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Application.Faturas.Ports
 {
-    public interface IFaturasManager
+    public interface IFaturaManager
     {
         Task<FaturaDTO> CriarAsync(CriarFaturaDTO request);
-        Task<FaturaDTO> ObterPorIdAsync(Guid id);
+        Task<FaturaDTO?> ObterPorIdAsync(Guid id);
         Task<IEnumerable<FaturaDTO>> ObterAsync(FaturaFilterDTO request);
-        Task<FaturaDTO> AtualizarClienteAsync(Guid id, AtualizarClienteDTO request);
+        Task<FaturaDTO> AtualizarAsync(Guid id, AtualizarClienteDTO request);
         Task DeletarAsync(Guid id);
         Task<FaturaDTO> FecharFaturaAsync(Guid id);
         Task<FaturaDTO> AdicionarItemAsync(Guid id, AdicionarItemDTO request);
