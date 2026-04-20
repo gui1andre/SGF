@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Application.Faturas.DTO
 {
-    public record UpdateItemDTO(
+    public record AtualizarItemDTO(
         string Descricao,
         int Quantidade,
         decimal ValorUnitario,

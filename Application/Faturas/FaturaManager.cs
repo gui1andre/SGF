@@ -96,7 +96,7 @@ namespace Application.Faturas
             return MapToDto(fatura);
         }
 
-        public async Task<FaturaDTO> UpdateItemAsync(Guid faturaId, Guid ItemId, UpdateItemDTO request)
+        public async Task<FaturaDTO> UpdateItemAsync(Guid faturaId, Guid ItemId, AtualizarItemDTO request)
         {
             var fatura = await ObterFaturaOrThrowAsync(faturaId);
             fatura.AtualizarItem(ItemId, request.Descricao, request.Quantidade, request.ValorUnitario, request.Justificativa);
