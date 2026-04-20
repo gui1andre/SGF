@@ -64,7 +64,7 @@ namespace SGF.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id: Guid}")]
+        [HttpPut("{id: Guid}")]
         public async Task<IActionResult> Atualizar(Guid id, [FromBody] AtualizarClienteDTO request)
         {
             var result = await _manager.AtualizarAsync(id, request);
