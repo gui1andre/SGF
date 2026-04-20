@@ -67,5 +67,54 @@ namespace SGF.Domain.Test.ItensFatura
 
             Assert.Null(exception); 
         }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Deve_Lancar_Excecao_Quando_Quantidade_For_Invalida(int quantidade)
+        {
+            var ex = Assert.Throws<ArgumentException>(() => new ItemFatura
+            (
+                faturaId: Guid.NewGuid(),
+                descricao: "Item válido",
+                quantidade: quantidade,
+                valorUnitario: 10m
+            ));
+
+            Assert.Contains("Quantidade deve ser maior que 0", ex.Message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-10)]
+        public void Deve_Lancar_Excecao_Quando_Valor_Unitario_For_Invalido(decimal valorUnitario)
+        {
+            var ex = Assert.Throws<ArgumentException>(() => new ItemFatura
+            (
+                faturaId: Guid.NewGuid(),
+                descricao: "Item válido",
+                quantidade: 1,
+                valorUnitario: valorUnitario
+            ));
+
+            Assert.Contains("Valor unitario deve ser maior que zero", ex.Message);
+        }
+
+        [Fact]
+        public void Deve_Remover_Justificativa_Quando_Informada_Como_Vazia()
+        {
+            var item = new ItemFatura
+            (
+                faturaId: Guid.NewGuid(),
+                descricao: "Item válido",
+                quantidade: 1,
+                valorUnitario: 100m,
+                justificativa: "Justificativa inicial"
+            );
+
+            item.Atualizar("Item válido", 1, 100m, string.Empty);
+
+            Assert.Null(item.Justificativa);
+        }
     }
 }

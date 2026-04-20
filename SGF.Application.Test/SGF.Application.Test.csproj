@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SGF.API\SGF.API.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 

@@ -49,6 +49,13 @@ namespace SGF.Domain.Test.Faturas
         {
 
             var fatura = new Fatura ("Teste Fechamento");
+            fatura.AdicionarItem(new ItemFatura(
+                faturaId: fatura.Id,
+                descricao: "Item inicial",
+                quantidade: 1,
+                valorUnitario: 100,
+                justificativa: "Teste"
+            ));
             fatura.FecharFatura();
 
             Assert.Throws<InvalidOperationException>(() => fatura.AdicionarItem(new ItemFatura(
@@ -65,6 +72,13 @@ namespace SGF.Domain.Test.Faturas
         public void Nao_Deve_Permitir_Adicionar_Item_Ao_Fechar_Fatura()
         {
             var fatura = new Fatura ("Teste Adição Item");
+            fatura.AdicionarItem(new ItemFatura(
+                faturaId: fatura.Id,
+                descricao: "Item inicial",
+                quantidade: 1,
+                valorUnitario: 100,
+                justificativa: "Teste"
+            ));
             fatura.FecharFatura();
             Assert.Throws<InvalidOperationException>(() => fatura.AdicionarItem(new ItemFatura(
 
@@ -84,6 +98,50 @@ namespace SGF.Domain.Test.Faturas
             fatura.FecharFatura();
 
             Assert.Throws<InvalidOperationException>(() => fatura.RemoverItem(item.Id));
+        }
+
+        [Fact]
+        public void Nao_Deve_Permitir_Fechar_Fatura_Sem_Itens()
+        {
+            var fatura = new Fatura("Cliente sem itens");
+
+            var ex = Assert.Throws<InvalidOperationException>(() => fatura.FecharFatura());
+
+            Assert.Contains("sem itens", ex.Message);
+        }
+
+        [Fact]
+        public void AtualizarItem_Deve_Recalcular_ValorTotal_Da_Fatura()
+        {
+            var fatura = new Fatura("Cliente Teste");
+            var item = new ItemFatura(fatura.Id, "Item inicial", 1, 100m, null);
+            fatura.AdicionarItem(item);
+
+            fatura.AtualizarItem(item.Id, "Item atualizado", 2, 200m, null);
+
+            Assert.Equal(400m, fatura.ValorTotal);
+        }
+
+        [Fact]
+        public void RemoverItem_Inexistente_Deve_Lancar_Excecao()
+        {
+            var fatura = new Fatura("Cliente Teste");
+            var item = new ItemFatura(fatura.Id, "Item válido", 1, 100m, null);
+            fatura.AdicionarItem(item);
+
+            var ex = Assert.Throws<InvalidOperationException>(() => fatura.RemoverItem(Guid.NewGuid()));
+
+            Assert.Contains("Item não encontrado", ex.Message);
+        }
+
+        [Fact]
+        public void AtualizarCliente_Com_Nome_Vazio_Deve_Lancar_Excecao()
+        {
+            var fatura = new Fatura("Cliente Inicial");
+
+            var ex = Assert.Throws<ArgumentException>(() => fatura.AtualizarCliente(string.Empty));
+
+            Assert.Contains("obrigatório", ex.Message);
         }
     }
 }
