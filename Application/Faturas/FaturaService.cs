@@ -11,11 +11,11 @@ using System.Text;
 
 namespace Application.Faturas
 {
-    public class FaturaManager : IFaturaManager
+    public class FaturaService : IFaturaService
     {
         private readonly IFaturaRepository _faturaRepository;
 
-        public FaturaManager(IFaturaRepository faturaRepository)
+        public FaturaService(IFaturaRepository faturaRepository)
         {
             this._faturaRepository = faturaRepository;
         }

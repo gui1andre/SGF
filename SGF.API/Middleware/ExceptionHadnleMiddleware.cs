@@ -2,13 +2,13 @@
 
 namespace SGF.API.Middleware
 {
-    public class ExceptionHadleMiddleware
+    public class ExceptionHadnleMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionHadleMiddleware> _logger;
+        private readonly ILogger<ExceptionHadnleMiddleware> _logger;
         private readonly IHostEnvironment _env;
 
-        public ExceptionHadleMiddleware(RequestDelegate next, ILogger<ExceptionHadleMiddleware> logger, IHostEnvironment env)
+        public ExceptionHadnleMiddleware(RequestDelegate next, ILogger<ExceptionHadnleMiddleware> logger, IHostEnvironment env)
         {
             _next = next;
             _logger = logger;

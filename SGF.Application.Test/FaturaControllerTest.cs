@@ -12,15 +12,15 @@ namespace SGF.Application.Test
 {
     public class FaturaControllerTest
     {
-        private readonly Mock<IFaturaManager> _managerMock;
+        private readonly Mock<IFaturaService> _serviceMock;
         private readonly Mock<ILogger<FaturaController>> _loggerMock;
         private readonly FaturaController _controller;
 
         public FaturaControllerTest()
         {
-            _managerMock = new Mock<IFaturaManager>();
+            _serviceMock = new Mock<IFaturaService>();
             _loggerMock = new Mock<ILogger<FaturaController>>();
-            _controller = new FaturaController(_managerMock.Object, _loggerMock.Object);
+            _controller = new FaturaController(_serviceMock.Object, _loggerMock.Object);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace SGF.Application.Test
             var validatorMock = CreateValidValidatorMock<CriarFaturaDTO>();
             var fatura = CreateFaturaDto();
 
-            _managerMock.Setup(m => m.CriarAsync(dto)).ReturnsAsync(fatura);
+            _serviceMock.Setup(m => m.CriarAsync(dto)).ReturnsAsync(fatura);
 
             var result = await _controller.Criar(dto, validatorMock.Object);
 
@@ -42,7 +42,7 @@ namespace SGF.Application.Test
         }
 
         [Fact]
-        public async Task Criar_ComDadosInvalidos_DeveRetornarBadRequestESemChamarManager()
+        public async Task Criar_ComDadosInvalidos_DeveRetornarBadRequestESemChamarService()
         {
             var dto = new CriarFaturaDTO("Cliente Teste");
             var validatorMock = CreateInvalidValidatorMock<CriarFaturaDTO>("NomeCliente", "Nome inválido");
@@ -50,13 +50,13 @@ namespace SGF.Application.Test
             var result = await _controller.Criar(dto, validatorMock.Object);
 
             Assert.IsType<BadRequestObjectResult>(result);
-            _managerMock.Verify(m => m.CriarAsync(It.IsAny<CriarFaturaDTO>()), Times.Never);
+            _serviceMock.Verify(m => m.CriarAsync(It.IsAny<CriarFaturaDTO>()), Times.Never);
         }
 
         [Fact]
         public async Task ObterPorId_QuandoNaoEncontrada_DeveRetornarNotFound()
         {
-            _managerMock.Setup(m => m.ObterPorIdAsync(It.IsAny<Guid>()))
+            _serviceMock.Setup(m => m.ObterPorIdAsync(It.IsAny<Guid>()))
                 .ReturnsAsync((FaturaDTO?)null);
 
             var result = await _controller.ObterPorId(Guid.NewGuid());
@@ -72,7 +72,7 @@ namespace SGF.Application.Test
             var validatorMock = CreateValidValidatorMock<AdicionarItemDTO>();
             var resultDto = CreateFaturaDto(faturaId);
 
-            _managerMock.Setup(m => m.AdicionarItemAsync(faturaId, dto))
+            _serviceMock.Setup(m => m.AdicionarItemAsync(faturaId, dto))
                 .ReturnsAsync(resultDto);
 
             var result = await _controller.AdicionarItem(faturaId, dto, validatorMock.Object);
@@ -85,7 +85,7 @@ namespace SGF.Application.Test
         }
 
         [Fact]
-        public async Task AdicionarItem_ComDadosInvalidos_DeveRetornarBadRequestESemChamarManager()
+        public async Task AdicionarItem_ComDadosInvalidos_DeveRetornarBadRequestESemChamarService()
         {
             var faturaId = Guid.NewGuid();
             var dto = new AdicionarItemDTO("Produto Teste", 2, 50m, null);
@@ -94,7 +94,7 @@ namespace SGF.Application.Test
             var result = await _controller.AdicionarItem(faturaId, dto, validatorMock.Object);
 
             Assert.IsType<BadRequestObjectResult>(result);
-            _managerMock.Verify(m => m.AdicionarItemAsync(It.IsAny<Guid>(), It.IsAny<AdicionarItemDTO>()), Times.Never);
+            _serviceMock.Verify(m => m.AdicionarItemAsync(It.IsAny<Guid>(), It.IsAny<AdicionarItemDTO>()), Times.Never);
         }
 
         private static Mock<IValidator<T>> CreateValidValidatorMock<T>()

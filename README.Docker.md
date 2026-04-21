@@ -116,4 +116,4 @@ Para produção:
 - Use variáveis de ambiente ou secrets do Docker
 - Altere as senhas
 - Configure certificados SSL/TLS adequados
-- Utilize um provedor de gerenciamento de secrets (Azure Key Vault, AWS Secrets Manager, etc.)
+- Utilize um provedor de gerenciamento de secrets (Azure Key Vault, AWS Secrets Service, etc.)

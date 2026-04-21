@@ -1,11 +1,8 @@
 ﻿using Application.Faturas.DTO;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Faturas.Ports
 {
-    public interface IFaturaManager
+    public interface IFaturaService
     {
         Task<FaturaDTO> CriarAsync(CriarFaturaDTO request);
         Task<FaturaDTO?> ObterPorIdAsync(Guid id);

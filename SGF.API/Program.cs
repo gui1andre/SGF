@@ -18,7 +18,7 @@ builder.Services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(connectionString));
 
 
-builder.Services.AddScoped<IFaturaManager, FaturaManager>();
+builder.Services.AddScoped<IFaturaService, FaturaService>();
 builder.Services.AddScoped<IFaturaRepository, FaturaRepository>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CriarFaturaDTOValidator).Assembly);
@@ -27,7 +27,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHadleMiddleware>();
+app.UseMiddleware<ExceptionHadnleMiddleware>();
 
 app.MapOpenApi();
 app.MapScalarApiReference();

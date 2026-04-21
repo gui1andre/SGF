@@ -42,7 +42,7 @@ O sistema permite criar, atualizar, listar e fechar faturas, além de gerenciar 
 - ✅ Cálculo automático do valor total
 - ✅ Validação de justificativa para itens acima de R$ 1.000,00
 
-## 🏗️ Arquitetura
+## 🏗 Arquitetura
 
 O projeto segue os princípios de **Clean Architecture** e **Domain-Driven Design (DDD)**, organizado em camadas:
 
@@ -63,10 +63,10 @@ SGF/
 - Regras de negócio e validações de domínio
 
 #### 🟢 Application
-- Gerenciadores (Managers): `FaturaManager`
+- Services: `FaturaService`
+- Interface: `IFaturaService`
 - DTOs (Data Transfer Objects)
 - Validadores (FluentValidation)
-- Interfaces de serviços
 
 #### 🟡 Infrastructure
 - Implementação de repositórios
@@ -80,7 +80,7 @@ SGF/
 - Configuração de Dependency Injection
 - Documentação OpenAPI/Scalar
 
-## 🛠️ Tecnologias
+## 🛠 Tecnologias
 
 - **.NET 10** - Framework principal
 - **ASP.NET Core** - Web API
@@ -149,11 +149,8 @@ Para executar o projeto completo com Docker (incluindo SQL Server), consulte a d
 
 Resumo rápido:
 ```bash
-# Iniciar containers
+# Iniciar containers (migrations aplicadas automaticamente na inicialização)
 docker-compose up -d
-
-# Aplicar migrations
-docker-compose exec api dotnet ef database update --project /app/Infrastructure.dll
 
 # Acessar a API
 # http://localhost:5000
@@ -184,9 +181,9 @@ SGF/
 │   └── Faturas/
 │       ├── DTO/                           # Data Transfer Objects
 │       ├── Ports/
-│       │   └── IFaturaManager.cs          # Interface do gerenciador
+│       │   └── IFaturaService.cs          # Interface do gerenciador
 │       ├── Validators/                    # Validadores FluentValidation
-│       └── FaturaManager.cs               # Lógica de aplicação
+│       └── FaturaService.cs               # Lógica de aplicação
 │
 ├── Infrastructure/
 │   ├── Data/
@@ -198,12 +195,15 @@ SGF/
 │   ├── Controllers/
 │   │   └── FaturaController.cs            # Endpoints REST
 │   ├── Middleware/
-│   │   └── ExceptionHandleMiddleware.cs   # Tratamento global de exceções
+│   │   └── ExceptionHadnleMiddleware.cs   # Tratamento global de exceções
 │   ├── Program.cs                         # Configuração da aplicação
-│   └── appsettings.json                   # Configurações
+│   ├── appsettings.json                   # Configurações
+│   └── appsettings.Docker.json            # Configurações para ambiente Docker
 │
 ├── Dockerfile                             # Imagem Docker da API
 ├── docker-compose.yml                     # Orquestração Docker
+├── .dockerignore                          # Exclusões do build Docker
+├── README.Docker.md                       # Guia de execução com Docker
 └── README.md                              # Este arquivo
 ```
 

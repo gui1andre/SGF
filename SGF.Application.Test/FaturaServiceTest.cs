@@ -8,15 +8,15 @@ using Moq;
 
 namespace SGF.Application.Test
 {
-    public class FaturaManagerTest
+    public class FaturaServiceTest
     {
         private readonly Mock<IFaturaRepository> _repoMock;
-        private readonly FaturaManager _manager;
+        private readonly FaturaService _service;
 
-        public FaturaManagerTest()
+        public FaturaServiceTest()
         {
             _repoMock = new Mock<IFaturaRepository>();
-            _manager = new FaturaManager(_repoMock.Object);
+            _service = new FaturaService(_repoMock.Object);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace SGF.Application.Test
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = await _manager.CriarAsync(dto);
+            var result = await _service.CriarAsync(dto);
 
             // Assert
             Assert.NotNull(result);
@@ -46,7 +46,7 @@ namespace SGF.Application.Test
                 .ReturnsAsync((Fatura?)null);
 
             // Act
-            var result = await _manager.ObterPorIdAsync(Guid.NewGuid());
+            var result = await _service.ObterPorIdAsync(Guid.NewGuid());
 
             // Assert
             Assert.Null(result);
@@ -61,7 +61,7 @@ namespace SGF.Application.Test
 
             // Act & Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() => 
-                _manager.AtualizarAsync(Guid.NewGuid(), new AtualizarClienteDTO("Novo Nome")));
+                _service.AtualizarAsync(Guid.NewGuid(), new AtualizarClienteDTO("Novo Nome")));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace SGF.Application.Test
 
             // Act & Assert
             var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => 
-                _manager.AtualizarAsync(fatura.Id, new AtualizarClienteDTO("Novo Nome")));
+                _service.AtualizarAsync(fatura.Id, new AtualizarClienteDTO("Novo Nome")));
             Assert.Contains("fechada", ex.Message);
         }
 
@@ -92,7 +92,7 @@ namespace SGF.Application.Test
 
             // Act & Assert
             var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => 
-                _manager.DeletarAsync(fatura.Id));
+                _service.DeletarAsync(fatura.Id));
             Assert.Contains("fechada", ex.Message);
         }
 
@@ -108,7 +108,7 @@ namespace SGF.Application.Test
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = await _manager.FecharFaturaAsync(fatura.Id);
+            var result = await _service.FecharFaturaAsync(fatura.Id);
 
             // Assert
             Assert.Equal(StatusFatura.Fechada, result.Status);
@@ -128,7 +128,7 @@ namespace SGF.Application.Test
 
             // Act & Assert
             var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => 
-                _manager.AdicionarItemAsync(fatura.Id, itemDto));
+                _service.AdicionarItemAsync(fatura.Id, itemDto));
             Assert.Contains("fechada", ex.Message);
         }
 
@@ -144,7 +144,7 @@ namespace SGF.Application.Test
             var itemDto = new AdicionarItemDTO("Produto", 3, 100m, null);
 
             // Act
-            var result = await _manager.AdicionarItemAsync(fatura.Id, itemDto);
+            var result = await _service.AdicionarItemAsync(fatura.Id, itemDto);
 
             // Assert
             Assert.Equal(300m, result.ValorTotal);
@@ -165,7 +165,7 @@ namespace SGF.Application.Test
                 .Returns(Task.CompletedTask);
 
             // Act
-            var result = await _manager.RemoverItemAsync(fatura.Id, item.Id);
+            var result = await _service.RemoverItemAsync(fatura.Id, item.Id);
             // Assert
             Assert.Equal(0, result.ValorTotal);
             Assert.Empty(result.ItensFatura);
@@ -182,7 +182,7 @@ namespace SGF.Application.Test
                 .Returns(Task.CompletedTask);
 
             // Act
-            await _manager.DeletarAsync(fatura.Id);
+            await _service.DeletarAsync(fatura.Id);
 
             // Assert
             _repoMock.Verify(r => r.DeletarAsync(fatura), Times.Once);
@@ -197,7 +197,7 @@ namespace SGF.Application.Test
                 .ReturnsAsync(fatura);
 
             // Act & Assert
-            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _manager.FecharFaturaAsync(fatura.Id));
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.FecharFaturaAsync(fatura.Id));
             Assert.Contains("sem itens", ex.Message);
             _repoMock.Verify(r => r.AtualizarAsync(It.IsAny<Fatura>()), Times.Never);
         }
@@ -215,7 +215,7 @@ namespace SGF.Application.Test
             var itemDto = new AdicionarItemDTO("Produto Teste", 1, 50m, null);
 
             // Act
-            var result = await _manager.AdicionarItemAsync(fatura.Id, itemDto);
+            var result = await _service.AdicionarItemAsync(fatura.Id, itemDto);
 
             // Assert
             Assert.Equal(fatura.Id, result.Id);
@@ -238,7 +238,7 @@ namespace SGF.Application.Test
             var request = new AtualizarItemDTO("Produto Atualizado", 2, 150m, null);
 
             // Act
-            var result = await _manager.AtualizarItemAsync(fatura.Id, item.Id, request);
+            var result = await _service.AtualizarItemAsync(fatura.Id, item.Id, request);
 
             // Assert
             Assert.Equal(300m, result.ValorTotal);
@@ -262,7 +262,7 @@ namespace SGF.Application.Test
                 .ReturnsAsync(fatura);
 
             // Act & Assert
-            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _manager.RemoverItemAsync(fatura.Id, item.Id));
+            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.RemoverItemAsync(fatura.Id, item.Id));
             Assert.Contains("fechada", ex.Message);
         }
     }

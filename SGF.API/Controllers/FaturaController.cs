@@ -11,12 +11,12 @@ namespace SGF.API.Controllers
     [Route("api/[controller]")]
     public class FaturaController : ControllerBase
     {
-        private readonly IFaturaManager _manager;
+        private readonly IFaturaService _service;
         private readonly ILogger<FaturaController> _logger;
 
-        public FaturaController(IFaturaManager manager, ILogger<FaturaController> logger)
+        public FaturaController(IFaturaService Service, ILogger<FaturaController> logger)
         {
-            _manager = manager;
+            _service = Service;
             _logger = logger;
         }
 
@@ -31,7 +31,7 @@ namespace SGF.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var fatura = await _manager.CriarAsync(criarFaturaDTO);
+            var fatura = await _service.CriarAsync(criarFaturaDTO);
 
             _logger.LogInformation($"Fatura {fatura.Id} criada com sucesso.");
 
@@ -41,7 +41,7 @@ namespace SGF.API.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
-            var fatura = await _manager.ObterPorIdAsync(id);
+            var fatura = await _service.ObterPorIdAsync(id);
 
             if (fatura == null) return NotFound();
 
@@ -58,7 +58,7 @@ namespace SGF.API.Controllers
         {
             var filter = new FaturaFilterDTO(nomeCliente, dataInicial, dataFinal, status);
 
-            var result = await _manager.ObterAsync(filter);
+            var result = await _service.ObterAsync(filter);
 
             return Ok(result);
         }
@@ -71,21 +71,21 @@ namespace SGF.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var result = await _manager.AtualizarAsync(id, request);
+            var result = await _service.AtualizarAsync(id, request);
             return Ok(result);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Deletar(Guid id)
         {
-            await _manager.DeletarAsync(id);
+            await _service.DeletarAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id:guid}/Fechar")]
         public async Task<IActionResult> Fechar(Guid id)
         {
-            var result = await _manager.FecharFaturaAsync(id);
+            var result = await _service.FecharFaturaAsync(id);
             return Ok(result);
         }
 
@@ -97,7 +97,7 @@ namespace SGF.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var result = await _manager.AdicionarItemAsync(faturaId, request);
+            var result = await _service.AdicionarItemAsync(faturaId, request);
             return CreatedAtAction(nameof(ObterPorId), new { id = result.Id }, result);
         }
 
@@ -109,14 +109,14 @@ namespace SGF.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var result = await _manager.AtualizarItemAsync(faturaId, itensId, request);
+            var result = await _service.AtualizarItemAsync(faturaId, itensId, request);
             return Ok(result);
         }
 
         [HttpDelete("{faturaId:guid}/itens/{itensId:guid}")]
         public async Task<IActionResult> RemoverItem(Guid faturaId, Guid itensId) 
         {
-            var result = await _manager.RemoverItemAsync(faturaId, itensId);
+            var result = await _service.RemoverItemAsync(faturaId, itensId);
             return Ok(result);
         }
     }
